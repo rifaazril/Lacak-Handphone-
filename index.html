@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phone Location Finder - Simulasi Edukasi</title>
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --secondary-color: #1e40af;
+            --bg-color: #f3f4f6;
+            --card-bg: #ffffff;
+            --text-color: #1f2937;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            background-color: var(--card-bg);
+            width: 100%;
+            max-width: 450px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+
+        header p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .form-section {
+            padding: 25px;
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .phone-input-wrapper {
+            display: flex;
+            gap: 10px;
+        }
+
+        select, input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 16px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        select:focus, input:focus {
+            border-color: var(--primary-color);
+        }
+
+        select {
+            width: 110px;
+            background-color: #f9fafb;
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: var(--secondary-color);
+        }
+
+        button:disabled {
+            background-color: #9ca3af;
+            cursor: not-allowed;
+        }
+
+        /* Result Section */
+        .result-section {
+            background-color: #f8fafc;
+            padding: 20px;
+            border-top: 1px solid #e5e7eb;
+            display: none; /* Hidden by default */
+        }
+
+        .result-card {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 20px;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .data-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            font-size: 14px;
+        }
+
+        .data-label {
+            color: #6b7280;
+        }
+
+        .data-value {
+            font-weight: 600;
+            text-align: right;
+        }
+
+        .location-status {
+            margin-top: 15px;
+            padding: 10px;
+            background-color: #eff6ff;
+            border-radius: 8px;
+            color: var(--primary-color);
+            font-weight: 600;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .disclaimer {
+            padding: 15px;
+            font-size: 11px;
+            text-align: center;
+            color: #9ca3af;
+            background-color: #fff;
+            border-top: 1px solid #eee;
+        }
+
+        /* Loader */
+        .loader {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid var(--primary-color);
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>Phone Location Finder</h1>
+            <p>Simulasi Edukatif & Demo Teknologi</p>
+        </header>
+
+        <div class="form-section">
+            <div class="input-group">
+                <label for="country-code">Kode Negara</label>
+                <select id="country-code">
+                    <option value="62">+62 (Indonesia)</option>
+                    <option value="1">+1 (USA/Canada)</option>
+                    <option value="44">+44 (UK)</option>
+                    <option value="81">+81 (Jepang)</option>
+                    <option value="86">+86 (China)</option>
+                    <option value="91">+91 (India)</option>
+                    <option value="61">+61 (Australia)</option>
+                </select>
+            </div>
+
+            <div class="input-group">
+                <label for="phone-number">Nomor Handphone</label>
+                <input type="tel" id="phone-number" placeholder="812-3456-7890" maxlength="15">
+            </div>
+
+            <button id="search-btn" onclick="findLocation()">Cari Lokasi</button>
+        </div>
+
+        <!-- Loader -->
+        <div class="loader" id="loader">
+            <div class="spinner"></div>
+            <p>Mencari sinyal...</p>
+        </div>
+
+        <!-- Result Display -->
+        <div class="result-section" id="result">
+            <div class="result-card">
+                <div class="data-row">
+                    <span class="data-label">Operator Seluler</span>
+                    <span class="data-value" id="res-operator">-</span>
+                </div>
+                <div class="data-row">
+                    <span class="data-label">Perkiraan Lokasi</span>
+                    <span class="data-value" id="res-location">-</span>
+                </div>
+                <div class="data-row">
+                    <span class="data-label">Waktu Aktif Terakhir</span>
+                    <span class="data-value" id="res-time">-</span>
+                </div>
+                
+                <div class="location-status" id="res-status">
+                    <!-- Status icon -->
+                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                    <span>Memproses...</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="disclaimer">
+            <strong>Peringatan:</strong> Ini adalah simulasi untuk tujuan edukasi. 
+            Website ini tidak melacak lokasi nyata dan tidak menyimpan data pribadi.
+        </div>
+    </div>
+
+    <script>
+        // Data Dummy (Database Semu) untuk simulasi
+        const mockDatabase = {
+            '62': { // Indonesia
+                operator: ['Telkomsel', 'Indosat Ooredoo', 'XL Axiata', 'Smartfren'],
+                cities: ['Jakarta', 'Surabaya', 'Bandung', 'Medan', 'Makassar', 'Denpasar']
+            },
+            '1': { // USA
+                operator: ['Verizon', 'AT&T', 'T-Mobile', 'Sprint'],
+                cities: ['New York', 'Los Angeles', 'Chicago', 'Houston']
+            },
+            '44': { // UK
+                operator: ['EE', 'O2', 'Vodafone', 'Three'],
+                cities: ['London', 'Manchester', 'Birmingham', 'Liverpool']
+            },
+            '81': { // Japan
+                operator: ['NTT Docomo', 'SoftBank', 'KDDI'],
+                cities: ['Tokyo', 'Osaka', 'Kyoto', 'Yokohama']
+            },
+            '86': { // China
+                operator: ['China Mobile', 'China Unicom', 'China Telecom'],
+                cities: ['Beijing', 'Shanghai', 'Guangzhou', 'Shenzhen']
+            },
+            'default': {
+                operator: ['Unknown Provider'],
+                cities: ['Unknown City']
+            }
+        };
+
+        function getRandomItem(arr) {
+            return arr[Math.floor(Math.random() * arr.length)];
+        }
+
+        function getRandomTime() {
+            const minutes = Math.floor(Math.random() * 120); // 0 to 120 mins
+            if (minutes < 60) return `Terakhir online ${minutes} menit lalu`;
+            const hours = Math.floor(minutes / 60);
+            return `Terakhir online ${hours} jam lalu`;
+        }
+
+        function findLocation() {
+            const countryCode = document.getElementById('country-code').value;
+            const phoneNumber = document.getElementById('phone-number').value;
+            const btn = document.getElementById('search-btn');
+            const loader = document.getElementById('loader');
+            const resultDiv = document.getElementById('result');
+
+            // Validasi sederhana
+            if (phoneNumber.trim() === "") {
+                alert("Mohon masukkan nomor telepon.");
+                return;
+            }
+
+            // UI State: Loading
+            btn.disabled = true;
+            btn.innerText = "Mencari...";
+            resultDiv.style.display = 'none';
+            loader.style.display = 'block';
+
+            // Simulasi jeda jaringan (1.5 detik)
+            setTimeout(() => {
+                // Ambil data semu berdasarkan kode negara
+                const data = mockDatabase[countryCode] || mockDatabase['default'];
+                
+                // Hasil Acak
+                const randomOperator = getRandomItem(data.operator);
+                const randomCity = getRandomItem(data.cities);
+                const randomTime = getRandomTime();
+
+                // Update HTML
+                document.getElementById('res-operator').innerText = randomOperator;
+                document.getElementById('res-location').innerText = data.cities[0] === 'Unknown City' ? 'Tidak Terdeteksi' : `Kota ${randomCity}, Indonesia`; // Sederhana
+                // Logic khusus untuk tampilan string lokasi yang lebih baik
+                if(countryCode === '62') {
+                    document.getElementById('res-location').innerText = `Kota ${randomCity}`;
+                } else if (countryCode === '1') {
+                    document.getElementById('res-location').innerText = `${randomCity}, USA`;
+                } else {
+                    document.getElementById('res-location').innerText = randomCity;
+                }
+
+                document.getElementById('res-time').innerText = randomTime;
+                
+                const statusElement = document.getElementById('res-status');
+                if(countryCode === '62') {
+                    statusElement.innerHTML = `<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314
